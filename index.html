@@ -6,7 +6,21 @@
 <title>Sorteio de Equipes de Futebol</title>
 <style>
     body { font-family: Arial, sans-serif; padding: 20px; }
-    textarea, input, button { margin: 5px 0; width: 100%; max-width: 400px; }
+    
+    /* Inputs de texto, textarea e botões continuam 100% */
+    textarea, input[type="text"], button { 
+        margin: 5px 0; 
+        width: 100%; 
+        max-width: 400px; 
+    }
+
+    /* Checkboxes ficam automáticos e alinhados */
+    input[type="checkbox"] {
+        width: auto;
+        margin-right: 5px;
+        vertical-align: middle;
+    }
+
     ul { list-style: none; padding: 0; }
     li { margin: 5px 0; }
     .team { margin-top: 20px; }
@@ -37,7 +51,7 @@ function addPlayers() {
     const textarea = document.getElementById('playerNames');
     const names = textarea.value.split('\n').map(n => n.trim()).filter(n => n !== '');
     
-    names.forEach(name => players.push({ name, notPaid: false })); // todos pagaram por padrão
+    names.forEach(name => players.push({ name, notPaid: false }));
     
     renderPlayerList();
     textarea.value = '';
@@ -58,22 +72,19 @@ function toggleNotPaid(index, isChecked) {
 }
 
 function sortTeams() {
-    const paidPlayers = players.filter(p => !p.notPaid); // apenas quem pagou
+    const paidPlayers = players.filter(p => !p.notPaid);
     if (paidPlayers.length === 0) return alert('Não há jogadores que pagaram!');
 
     const teamSize = parseInt(document.getElementById('teamSize').value);
     if (teamSize < 1) return alert('Quantidade de pessoas por equipe inválida!');
 
-    // Embaralhar os jogadores
     const shuffled = [...paidPlayers].sort(() => Math.random() - 0.5);
 
-    // Dividir em equipes
     const teams = [];
     for (let i = 0; i < shuffled.length; i += teamSize) {
         teams.push(shuffled.slice(i, i + teamSize));
     }
 
-    // Mostrar equipes
     const output = document.getElementById('teamsOutput');
     output.innerHTML = '';
     teams.forEach((team, idx) => {
